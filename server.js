@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const pgp = require('pg-promise')();
+const express = require("express");
+const cors = require("cors");
+const pgp = require("pg-promise")();
 
 const app = express();
 
@@ -9,14 +9,14 @@ app.use(cors());
 
 //database connection
 const db = pgp({
-  host: 'localhost',
+  host: "localhost",
   port: 5432,
-  database: 'insights',
+  database: "insights",
   //   user: '',
   //   password: '',
 });
 
-app.get('/profile/:id', (req, res) => {
+app.get("/profile/:id", (req, res) => {
   const userId = req.params.id; // Access the user ID from the route parameters
   db.one(
     `SELECT p.id,
@@ -37,14 +37,14 @@ app.get('/profile/:id', (req, res) => {
     userId
   )
     .then((user) => {
-      res.json({ user, message: 'User profile retrieved successfully' });
+      res.json({ user, message: "User profile retrieved successfully" });
     })
     .catch((error) => {
-      res.status(500).json({ error: 'Error retrieving user' });
+      res.status(500).json({ error: "Error retrieving user" });
     });
 });
 
-app.get('/providers', async (req, res) => {
+app.get("/providers", async (req, res) => {
   const institutionAndProviderQuery = `
   SELECT
   providers.*,
@@ -86,12 +86,11 @@ GROUP BY
     console.log(result); // Do something with the result
     res.status(200).json(result); // Send the result as JSON response
   } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(500).json({ error: 'Internal server error' }); // Handle the error and send an appropriate response
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal server error" }); // Handle the error and send an appropriate response
   }
 });
 
-//   db.any('SELECT * FROM providers')
 //     .then((providers) => {
 //       res.json(providers);
 //     })
@@ -160,26 +159,26 @@ GROUP BY
 //     });
 // });
 
-app.patch('/profile/:id/access', (req, res) => {
-  console.log('updating user, access level:', req.body);
+app.patch("/profile/:id/access", (req, res) => {
+  console.log("updating user, access level:", req.body);
   const { id } = req.params;
   const { access_level } = req.body;
 
-  console.log('updating user, access level:', req.body);
+  console.log("updating user, access level:", req.body);
 
   // Construct the SQL update statement
-  let updateQuery = 'UPDATE patients SET access_level = $1 WHERE id = $2';
+  let updateQuery = "UPDATE patients SET access_level = $1 WHERE id = $2";
   const updateParams = [access_level, id];
 
   // Execute the SQL update statement using the `none` method
   db.none(updateQuery, updateParams)
     .then(() => {
-      console.log('Data updated successfully');
-      res.json({ message: 'Data updated successfully' });
+      console.log("Data updated successfully");
+      res.json({ message: "Data updated successfully" });
     })
     .catch((error) => {
-      console.error('Error updating data:', error);
-      res.status(500).json({ message: 'Error updating data' });
+      console.error("Error updating data:", error);
+      res.status(500).json({ message: "Error updating data" });
     });
 });
 
